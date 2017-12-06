@@ -23,8 +23,8 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 
-public class MainActivity extends ListActivity
-{
+public class MainActivity extends ListActivity {
+
     private static final String TAG = MainActivity.class.getSimpleName();
 
     private String mQuery;
@@ -34,10 +34,9 @@ public class MainActivity extends ListActivity
     private ProgressDialog mProgress;
 
 
-    protected void onCreate(Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
+    protected void onCreate(Bundle savedInstanceState) {
 
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         mItemList = new ArrayList<Item>();
@@ -46,10 +45,9 @@ public class MainActivity extends ListActivity
 
         mListView = (ListView) findViewById(android.R.id.list);
 
-        ((Button) findViewById(R.id.btn_search)).setOnClickListener(new OnClickListener()
-        {
-            public void onClick(View view)
-            {
+        ((Button) findViewById(R.id.btn_search)).setOnClickListener(new OnClickListener() {
+
+            public void onClick(View view) {
                 View focused = getCurrentFocus();
                 if (focused != null) {
                     focused.clearFocus();
@@ -63,8 +61,8 @@ public class MainActivity extends ListActivity
 
 
 
-    private final void search()
-    {
+    private final void search() {
+
         mQuery = ((EditText) findViewById(R.id.txt_search)).getText().toString().trim();
 
         if(mQuery.length() == 0) return;  // sanity check
@@ -76,19 +74,19 @@ public class MainActivity extends ListActivity
             Request.Method.GET,
             url,
             null,
-            new Response.Listener<JSONObject>()
-            {
-                public void onResponse(JSONObject json)
-                {
+            new Response.Listener<JSONObject>() {
+
+                public void onResponse(JSONObject json) {
+
                     if((mProgress != null) && (mProgress.isShowing())) mProgress.dismiss();
 
                     mItemList.clear();
 
-                    try
-                    {
+                    try {
+
                         JSONArray records = json.getJSONArray("records");
-                        for(int i=0; i<records.length(); i++)
-                        {
+
+                        for(int i=0; i<records.length(); i++) {
                             JSONObject obj = records.getJSONObject(i);
                             JSONObject fields = obj.getJSONObject("fields");
                             Item item = new Item(fields.getString("artist"),
@@ -97,8 +95,7 @@ public class MainActivity extends ListActivity
                             mItemList.add(item);
                         }
                     }
-                    catch(Exception e)
-                    {
+                    catch(Exception e) {
                         Log.e(TAG, "search()", e);
                     }
 
@@ -106,10 +103,8 @@ public class MainActivity extends ListActivity
                     mListView.smoothScrollToPosition(0);
                 }
             },
-            new Response.ErrorListener()
-            {
-                public void onErrorResponse(VolleyError e)
-                {
+            new Response.ErrorListener() {
+                public void onErrorResponse(VolleyError e) {
                     if((mProgress != null) && (mProgress.isShowing())) mProgress.dismiss();
                     Log.e(TAG, "search()", e);
                 }
@@ -118,5 +113,4 @@ public class MainActivity extends ListActivity
 
         MyRequestQueue.getInstance(this).getRequestQueue().add(jsonRequest);
     }
-
 }

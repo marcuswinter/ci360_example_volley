@@ -13,8 +13,7 @@ import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.ImageLoader;
 
 
-public class MyRequestQueue
-{
+public class MyRequestQueue {
 
     private static MyRequestQueue mInstance;
     private static Context mContext;
@@ -22,41 +21,35 @@ public class MyRequestQueue
     private RequestQueue mRequestQueue;
     private ImageLoader mImageLoader;
 
-    private MyRequestQueue(Context context)
-    {
+    private MyRequestQueue(Context context) {
+
         mContext = context;
         mRequestQueue = getRequestQueue();
+
         mImageLoader = new ImageLoader(
             mRequestQueue,
-            new ImageLoader.ImageCache()
-            {
+            new ImageLoader.ImageCache() {
                 private final LruCache<String, Bitmap> cache = new LruCache<String, Bitmap>(20);
-
-                public Bitmap getBitmap(String url)
-                {
+                public Bitmap getBitmap(String url) {
                     return cache.get(url);
                 }
-
-                public void putBitmap(String url, Bitmap bitmap)
-                {
+                public void putBitmap(String url, Bitmap bitmap) {
                     cache.put(url, bitmap);
                 }
             });
     }
 
-    public static synchronized MyRequestQueue getInstance(Context context)
-    {
-        if (mInstance == null)
-        {
+    public static synchronized MyRequestQueue getInstance(Context context) {
+
+        if (mInstance == null) {
             mInstance = new MyRequestQueue(context);
         }
         return mInstance;
     }
 
-    public RequestQueue getRequestQueue()
-    {
-        if (mRequestQueue == null)
-        {
+    public RequestQueue getRequestQueue() {
+
+        if (mRequestQueue == null) {
             Cache cache = new DiskBasedCache(mContext.getCacheDir(), 10 * 1024 * 1024);
             Network network = new BasicNetwork(new HurlStack());
             mRequestQueue = new RequestQueue(cache, network);
@@ -65,8 +58,7 @@ public class MyRequestQueue
         return mRequestQueue;
     }
 
-    public ImageLoader getImageLoader()
-    {
+    public ImageLoader getImageLoader() {
         return mImageLoader;
     }
 
